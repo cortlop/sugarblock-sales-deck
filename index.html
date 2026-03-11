@@ -270,8 +270,74 @@
     box-shadow: 0 8px 32px rgba(255,255,255,0.2);
   }
   .cta-button:hover { transform: scale(1.05) translateY(-2px); box-shadow: 0 16px 48px rgba(255,255,255,0.3); }
+  .cta-button-secondary:hover { border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.05); transform: scale(1.05) translateY(-2px); }
   .cta-contact { margin-top: 24px; font-size: 15px; color: rgba(255,255,255,0.6); }
   .cta-contact a { color: rgba(255,255,255,0.8); text-decoration: none; }
+
+
+  /* Registration Modal */
+  .reg-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000;
+    background: rgba(0,0,0,0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+  }
+  .reg-overlay.open { opacity: 1; pointer-events: all; }
+  .reg-modal {
+    background: var(--black); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px; padding: 40px 36px; width: 90%; max-width: 440px;
+    position: relative; box-shadow: 0 32px 64px rgba(0,0,0,0.5);
+    transform: translateY(20px) scale(0.97); transition: transform 0.3s ease;
+  }
+  .reg-overlay.open .reg-modal { transform: translateY(0) scale(1); }
+  .reg-close {
+    position: absolute; top: 16px; right: 20px; background: none; border: none;
+    color: rgba(255,255,255,0.4); font-size: 28px; cursor: pointer; transition: color 0.2s;
+    line-height: 1;
+  }
+  .reg-close:hover { color: white; }
+  .reg-modal h3 {
+    font-size: 22px; font-weight: 700; color: white; margin-bottom: 4px; letter-spacing: -0.5px;
+  }
+  .reg-modal .reg-sub {
+    font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 24px;
+  }
+  .reg-field { margin-bottom: 14px; }
+  .reg-field label {
+    display: block; font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.8px; color: rgba(255,255,255,0.5); margin-bottom: 5px;
+  }
+  .reg-field input, .reg-field select {
+    width: 100%; padding: 12px 14px; border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.06);
+    color: white; font-size: 15px; font-family: inherit; outline: none;
+    transition: border-color 0.2s;
+  }
+  .reg-field input:focus, .reg-field select:focus { border-color: var(--accent); }
+  .reg-field input::placeholder { color: rgba(255,255,255,0.25); }
+  .reg-field select option { background: var(--black); color: white; }
+  .reg-field .optional-tag { font-weight: 400; text-transform: none; letter-spacing: 0; color: rgba(255,255,255,0.25); }
+  .reg-row { display: flex; gap: 12px; }
+  .reg-row .reg-field { flex: 1; }
+  .reg-submit {
+    width: 100%; margin-top: 20px; padding: 14px; border: none; border-radius: 12px;
+    background: var(--accent); color: white; font-size: 16px; font-weight: 700;
+    font-family: inherit; cursor: pointer; transition: transform 0.2s, opacity 0.2s;
+  }
+  .reg-submit:hover { transform: translateY(-1px); opacity: 0.9; }
+  .reg-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .reg-success {
+    text-align: center; padding: 20px 0;
+  }
+  .reg-success .check { font-size: 48px; margin-bottom: 12px; }
+  .reg-success h3 { font-size: 20px; margin-bottom: 8px; }
+  .reg-success p { font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+  .reg-error { color: #ff6b6b; font-size: 12px; margin-top: 12px; text-align: center; }
+
+  @media (max-width: 768px) {
+    .reg-modal { padding: 32px 24px; }
+    .reg-row { flex-direction: column; gap: 0; }
+  }
 
   /* Trust cards */
   .trust-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; }
@@ -474,9 +540,28 @@
     #globeCanvas { width: 100%; right: 0; opacity: 0.15; }
     .footnote { font-size: 11px !important; }
     .calc-row { flex-direction: column; gap: 12px; }
-    .calc-result { flex-direction: column; gap: 12px; }
-    .calc-card { min-width: auto; }
-    .calc-field input, .calc-field select { font-size: 16px; padding: 12px 14px; }
+    .calc-result { flex-direction: column; gap: 8px; }
+    .calc-card { min-width: auto; padding: 14px !important; }
+    .calc-card .calc-card-amount { font-size: 24px !important; }
+    .calc-card .calc-card-label { font-size: 10px !important; margin-bottom: 3px !important; }
+    .calc-card .calc-card-detail { font-size: 11px !important; margin-top: 2px !important; }
+    .calc-field input, .calc-field select { font-size: 16px; padding: 10px 12px; }
+    .calc-container { margin-top: 18px !important; }
+    .calc-note { font-size: 11px !important; margin-top: 10px !important; }
+    .calc-cta-row { margin-top: 14px !important; }
+    .calc-cta-link { font-size: 13px !important; }
+    #calculador h2 { font-size: 24px !important; }
+    .pricing-card { padding: 16px 14px !important; border-radius: 14px !important; }
+    .pricing-card .pricing-badge { padding: 3px 10px !important; margin-bottom: 8px !important; font-size: 9px !important; }
+    .pricing-rate { font-size: 28px !important; margin-bottom: 2px !important; }
+    .pricing-rate-sub { font-size: 11px !important; margin-bottom: 6px !important; }
+    .pricing-desc { font-size: 12px !important; }
+    .pricing-items { margin-top: 8px !important; }
+    .pricing-item { padding: 5px 0 !important; font-size: 12px !important; }
+    .pricing-highlight { margin-top: 8px !important; padding: 7px !important; font-size: 12px !important; }
+    #pricing h2 { font-size: 24px !important; }
+    .pricing-grid { gap: 10px !important; margin-top: 12px !important; }
+    .cta-button-secondary { font-size: 15px !important; padding: 14px 36px !important; }
   }
 
   @media (max-width: 480px) {
@@ -1298,5 +1383,153 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   });
 })();
 </script>
+
+<!-- Registration Modal -->
+<div class="reg-overlay" id="regOverlay">
+  <div class="reg-modal">
+    <button class="reg-close" id="regClose">&times;</button>
+    <div id="regForm">
+      <h3>Crea tu cuenta</h3>
+      <p class="reg-sub">Empieza a ahorrar en tus pagos internacionales.</p>
+      <div class="reg-row">
+        <div class="reg-field">
+          <label>Nombre *</label>
+          <input type="text" id="regFirstName" placeholder="Ej: Sebastián" required>
+        </div>
+        <div class="reg-field">
+          <label>Apellido</label>
+          <input type="text" id="regLastName" placeholder="Ej: López">
+        </div>
+      </div>
+      <div class="reg-field">
+        <label>Email corporativo *</label>
+        <input type="email" id="regEmail" placeholder="nombre@empresa.com" required>
+      </div>
+      <div class="reg-field">
+        <label>Empresa <span class="optional-tag">(opcional)</span></label>
+        <input type="text" id="regCompany" placeholder="Nombre de tu empresa">
+      </div>
+      <div class="reg-field">
+        <label>Cargo <span class="optional-tag">(opcional)</span></label>
+        <input type="text" id="regJobTitle" placeholder="Ej: CFO, Tesorero">
+      </div>
+      <div class="reg-field">
+        <label>Volumen mensual aprox. <span class="optional-tag">(opcional)</span></label>
+        <select id="regVolume">
+          <option value="">Seleccionar</option>
+          <option value="< USD 50K">&lt; USD 50K</option>
+          <option value="USD 50K - 100K">USD 50K - 100K</option>
+          <option value="USD 100K - 500K">USD 100K - 500K</option>
+          <option value="USD 500K+">USD 500K+</option>
+        </select>
+      </div>
+      <button class="reg-submit" id="regSubmit">Crear cuenta →</button>
+      <div class="reg-error" id="regError" style="display:none;"></div>
+    </div>
+    <div id="regSuccess" class="reg-success" style="display:none;">
+      <div class="check">✓</div>
+      <h3>¡Registro exitoso!</h3>
+      <p>Te contactaremos pronto para activar tu cuenta y empezar a ahorrar.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// Registration Modal
+(function() {
+  var overlay = document.getElementById('regOverlay');
+  var closeBtn = document.getElementById('regClose');
+  var submitBtn = document.getElementById('regSubmit');
+  var errorEl = document.getElementById('regError');
+  var formEl = document.getElementById('regForm');
+  var successEl = document.getElementById('regSuccess');
+
+  // Open modal from any .cta-button-secondary link
+  document.querySelectorAll('a[href="https://pay.sugarblock.io/auth/register"]').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      setTimeout(function() {
+        document.getElementById('regFirstName').focus();
+      }, 300);
+    });
+  });
+
+  function closeModal() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closeModal();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
+  });
+
+  submitBtn.addEventListener('click', function() {
+    var firstName = document.getElementById('regFirstName').value.trim();
+    var lastName = document.getElementById('regLastName').value.trim();
+    var email = document.getElementById('regEmail').value.trim();
+    var company = document.getElementById('regCompany').value.trim();
+    var jobTitle = document.getElementById('regJobTitle').value.trim();
+    var volume = document.getElementById('regVolume').value;
+
+    errorEl.style.display = 'none';
+
+    if (!firstName || !email) {
+      errorEl.textContent = 'Nombre y email son obligatorios.';
+      errorEl.style.display = 'block';
+      return;
+    }
+    if (!/^[^@]+@[^@]+\.[^@]+$/.test(email)) {
+      errorEl.textContent = 'Ingresa un email válido.';
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Enviando...';
+
+    var fields = [
+      { name: 'firstname', value: firstName },
+      { name: 'lastname', value: lastName },
+      { name: 'email', value: email },
+      { name: 'company', value: company },
+      { name: 'jobtitle', value: jobTitle },
+      { name: 'message', value: volume ? 'Volumen mensual: ' + volume : '' }
+    ];
+
+    fetch('https://api.hsforms.com/submissions/v3/integration/submit/51076212/d9c683d8-4913-1908-be9b-25b8ec9eed0a', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        fields: fields,
+        context: {
+          pageUri: window.location.href,
+          pageName: 'Sugarblock Sales Deck'
+        }
+      })
+    })
+    .then(function(res) {
+      if (!res.ok) throw new Error('Error ' + res.status);
+      return res.json();
+    })
+    .then(function() {
+      formEl.style.display = 'none';
+      successEl.style.display = 'block';
+    })
+    .catch(function(err) {
+      errorEl.textContent = 'Error al enviar. Intenta de nuevo.';
+      errorEl.style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Crear cuenta →';
+    });
+  });
+})();
+</script>
+
 </body>
 </html>
