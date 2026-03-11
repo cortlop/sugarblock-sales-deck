@@ -323,6 +323,22 @@
   .calc-card .calc-card-detail { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 4px; }
   .calc-card.save-card .calc-card-detail { color: rgba(52,199,89,0.7); }
   .calc-note { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 16px; max-width: 720px; }
+  .calc-advanced-toggle {
+    margin-top: 12px; cursor: pointer; user-select: none;
+    font-size: 12px; color: rgba(255,255,255,0.4); transition: color 0.2s;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .calc-advanced-toggle:hover { color: rgba(255,255,255,0.7); }
+  .calc-advanced-toggle .arrow { transition: transform 0.2s; font-size: 10px; }
+  .calc-advanced-toggle.open .arrow { transform: rotate(180deg); }
+  .calc-advanced-panel {
+    max-height: 0; overflow: hidden; transition: max-height 0.3s ease;
+    margin-top: 0;
+  }
+  .calc-advanced-panel.open { max-height: 80px; margin-top: 10px; }
+  .calc-advanced-panel .calc-field { max-width: 280px; }
+  .calc-advanced-panel .calc-field label { font-size: 11px; }
+  .calc-advanced-panel .calc-field select { font-size: 14px; padding: 10px 12px; }
   .calc-cta-row { margin-top: 24px; text-align: center; }
   .calc-cta-link { color: var(--accent); font-weight: 600; font-size: 15px; text-decoration: none; transition: opacity 0.2s; }
   .calc-cta-link:hover { opacity: 0.8; }
@@ -509,7 +525,7 @@
   <canvas id="globeCanvas"></canvas>
   <div class="hero-content">
     <h1>Tu banco te cobra <span style="color: var(--accent);">~2%</span><br>en cada pago al exterior.</h1>
-    <p class="subtitle" style="color: #a1a1a6;">Sugarblock: ~0.33%. +50 países. Tu proveedor cobra hoy.</p>
+    <p class="subtitle" style="color: #a1a1a6;">Spreads hasta 6x menores que tu banco. +50 países.</p>
     <a href="#calculador" class="cta-button" style="
       display: inline-block; margin-top: 24px; padding: 14px 36px;
       background: var(--accent); color: white; border-radius: 100px;
@@ -567,11 +583,33 @@
         </select>
       </div>
     </div>
+    <div class="calc-advanced-toggle" id="calcAdvancedToggle">
+      <span class="arrow">▼</span> Opciones avanzadas
+    </div>
+    <div class="calc-advanced-panel" id="calcAdvancedPanel">
+      <div class="calc-field">
+        <label>Spread estimado de tu banco</label>
+        <select id="calcBankRate">
+          <option value="0.007">~0.7%</option>
+          <option value="0.008">~0.8%</option>
+          <option value="0.01">~1.0%</option>
+          <option value="0.012">~1.2%</option>
+          <option value="0.015">~1.5%</option>
+          <option value="0.018">~1.8%</option>
+          <option value="0.02" selected>~2.0% (promedio banca CL)</option>
+          <option value="0.022">~2.2%</option>
+          <option value="0.025">~2.5%</option>
+          <option value="0.03">~3.0%</option>
+          <option value="0.035">~3.5%</option>
+          <option value="0.04">~4.0%</option>
+        </select>
+      </div>
+    </div>
     <div class="calc-result">
       <div class="calc-card bank-card">
         <div class="calc-card-label">Banco tradicional</div>
         <div class="calc-card-amount" id="calcBank">$10,000</div>
-        <div class="calc-card-detail">~2.0% spread/mes</div>
+        <div class="calc-card-detail" id="calcBankDetail">~2.0% spread/mes</div>
       </div>
       <div class="calc-card sg-card">
         <div class="calc-card-label">Sugarblock</div>
@@ -1154,8 +1192,8 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     singapur:  { low: 0.0070, mid: 0.0058, high: 0.0050 },
     hongkong:  { low: 0.0070, mid: 0.0058, high: 0.0050 }
   };
-  var bankRate = 0.02;
   var amountInput = document.getElementById("calcAmount");
+  var bankRateSelect = document.getElementById("calcBankRate");
   var corridorSelect = document.getElementById("calcCorridor");
   var bankEl = document.getElementById("calcBank");
   var sgEl = document.getElementById("calcSG");
@@ -1174,9 +1212,19 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     if (amount >= 40000) return r.mid;
     return r.low;
   }
+  var bankDetailEl = document.getElementById("calcBankDetail");
+  var advToggle = document.getElementById("calcAdvancedToggle");
+  var advPanel = document.getElementById("calcAdvancedPanel");
+
+  advToggle.addEventListener("click", function() {
+    advToggle.classList.toggle("open");
+    advPanel.classList.toggle("open");
+  });
+
   function update() {
     var amount = parseAmount(amountInput.value);
     var corridor = corridorSelect.value;
+    var bankRate = parseFloat(bankRateSelect.value);
     var sgRate = getSGRate(corridor, amount);
     var bankCost = amount * bankRate;
     var sgCost = amount * sgRate;
@@ -1184,6 +1232,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     bankEl.textContent = formatUSD(bankCost);
     sgEl.textContent = formatUSD(sgCost);
     sgDetailEl.textContent = "~" + (sgRate * 100).toFixed(2) + "% spread/mes";
+    bankDetailEl.textContent = "~" + (bankRate * 100).toFixed(1) + "% spread/mes";
     savingsEl.textContent = formatUSD(annualSavings);
     var ratio = bankRate / sgRate;
     var detail = savingsEl.parentElement.querySelector(".calc-card-detail");
@@ -1196,6 +1245,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   amountInput.addEventListener("input", function() { update(); });
   amountInput.addEventListener("blur", function() { formatInput(); });
   corridorSelect.addEventListener("change", function() { update(); });
+  bankRateSelect.addEventListener("change", function() { update(); });
   update();
 })();
 </script>
